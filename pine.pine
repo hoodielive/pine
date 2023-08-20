@@ -1,0 +1,24 @@
+//@version=5
+
+// Countertrade the false break of a key support/resistance
+// If the candle breaks the level, but it comes back before the close,
+// it should trigger an order.
+// The Stop loss is in %, the Take Profit is near the EMA.
+// The volatility filter is used to block new orders when the price
+// is near the EMA.
+// The volatility adjustment coefficients calibrate Stop Loss and Take
+// Profits values according to the current volitality.
+
+
+strategy("Failure Swing Strategy v1.", overlay=true, initial_capital=1000,
+default_qty_type=strategy.percent_of_equity, pyramiding=0, default_qty_value=100,
+commission_type=strategy.comission.percent, comission_value=0.2)
+
+period = input(84, minval=1, title='Support & Resistance')
+
+EMAp = input(120, minval=1, title='EMA')
+Threshold = input(5, minval=1, title='VolatilityFilter')
+coefficientTP = input(0.05, title='TP_VolatilityAdjustment', type=float, step=0.1)
+coefficientSL = input(0.02, title='SL_VolatilityAdjustment', type=float, step=0.1)
+
+sl_inp = input(2, title='Stop Loss %', type=float)/100
